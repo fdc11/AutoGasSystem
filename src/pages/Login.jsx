@@ -140,7 +140,6 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="correo@autogas.pe"
                   required
                   autoComplete="off"
                   inputMode="email"
@@ -159,7 +158,6 @@ export default function Login() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
                     required
                     autoComplete="off"
                     className={`${inputClass} pr-12`}
