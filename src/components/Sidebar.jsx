@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/AutoGasLogo.png'
 
+/* ─── Icon Components ─────────────────────────────────────────────────────── */
+
 function IconDashboard({ className }) {
   return (
     <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -63,44 +65,113 @@ function IconBadge({ className }) {
 }
 
 const ICONS = {
-  '/dashboard': IconDashboard,
-  '/unidades': IconCar,
+  '/dashboard':    IconDashboard,
+  '/unidades':     IconCar,
   '/conversiones': IconRefresh,
-  '/facturacion': IconInvoice,
-  '/postventa': IconSupport,
-  '/certificacion': IconBadge,
+  '/facturacion':  IconInvoice,
+  '/postventa':    IconSupport,
+  '/certificacion':IconBadge,
 }
 
-export default function Sidebar({ isOpen, setIsOpen }) {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { logout } = useAuth()
-  const [isMobile, setIsMobile] = useState(false)
+/* ─── Inline CSS for staggered animation (Tailwind can't handle dynamic delay) */
+const OVERLAY_STYLES = `
+  .mnav-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+  .mnav-overlay.is-open {
+    opacity: 1;
+  }
+  .mnav-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.32s ease-out, transform 0.32s ease-out;
+  }
+  .mnav-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
 
+/* ─── Menu items ──────────────────────────────────────────────────────────── */
+const MENU_ITEMS = [
+  { path: '/dashboard',    label: 'Dashboard' },
+  { path: '/unidades',     label: 'Unidades' },
+  { path: '/conversiones', label: 'Conversiones' },
+  { path: '/facturacion',  label: 'Facturación' },
+  { path: '/postventa',    label: 'Post-Venta' },
+  { path: '/certificacion',label: 'Certificación' },
+]
+
+/* ─── Component ───────────────────────────────────────────────────────────── */
+export default function Sidebar({ isOpen, setIsOpen }) {
+  const location  = useLocation()
+  const navigate  = useNavigate()
+  const { logout } = useAuth()
+
+  const [isMobile,        setIsMobile]        = useState(false)
+  const [overlayVisible,  setOverlayVisible]  = useState(false) // tracks CSS open class
+  const [visibleItems,    setVisibleItems]     = useState([])   // indices with .visible
+
+  /* ── Detect mobile ────────────────────────────────────────────────────── */
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    const check = () => setIsMobile(window.innerWidth < 1024)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
-  const menuItems = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/unidades', label: 'Unidades' },
-    { path: '/conversiones', label: 'Conversiones' },
-    { path: '/facturacion', label: 'Facturación' },
-    { path: '/postventa', label: 'Post-Venta' },
-    { path: '/certificacion', label: 'Certificación' },
-  ]
+  /* ── Overlay open/close orchestration ────────────────────────────────── */
+  useEffect(() => {
+    if (!isMobile) return
 
-  const isActive = (path) => location.pathname === path || (path !== '/dashboard' && location.pathname.startsWith(path))
+    if (isOpen) {
+      // Lock body scroll
+      document.body.style.overflow = 'hidden'
+
+      // Trigger overlay fade-in on next frame
+      requestAnimationFrame(() => setOverlayVisible(true))
+
+      // Stagger menu items: 60 ms per index, starting after 120 ms
+      const timers = MENU_ITEMS.map((_, i) =>
+        setTimeout(() => {
+          setVisibleItems(prev => [...prev, i])
+        }, 120 + i * 60)
+      )
+
+      return () => timers.forEach(clearTimeout)
+    } else {
+      // Close: reset immediately
+      document.body.style.overflow = ''
+      setOverlayVisible(false)
+      setVisibleItems([])
+    }
+  }, [isOpen, isMobile])
+
+  /* ── Escape key ───────────────────────────────────────────────────────── */
+  useEffect(() => {
+    if (!isMobile) return
+    const onKey = (e) => { if (e.key === 'Escape' && isOpen) setIsOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [isOpen, isMobile, setIsOpen])
+
+  /* ── Cleanup body overflow on unmount ────────────────────────────────── */
+  useEffect(() => {
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  /* ── Helpers ──────────────────────────────────────────────────────────── */
+  const isActive = (path) =>
+    location.pathname === path ||
+    (path !== '/dashboard' && location.pathname.startsWith(path))
 
   const handleLogout = async () => {
     try {
       await logout()
       navigate('/login')
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error)
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err)
     }
   }
 
@@ -109,34 +180,121 @@ export default function Sidebar({ isOpen, setIsOpen }) {
     if (isMobile) setIsOpen(false)
   }
 
+  /* ─────────────────────────────────────────────────────────────────────── */
   return (
     <>
+      {/* Inject animation styles once */}
+      <style>{OVERLAY_STYLES}</style>
+
+      {/* ── MOBILE: hamburger / close button (fixed, always on top) ──────── */}
       {isMobile && (
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed left-4 top-4 z-[200] flex flex-col gap-1 rounded-xl bg-ag-red px-3 py-2.5 shadow-card-md ring-2 ring-white/10"
+          className="fixed left-4 top-4 z-[200] flex items-center justify-center rounded-xl bg-ag-red shadow-card-md ring-2 ring-white/10"
+          style={{ width: 44, height: 44 }}
           aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
         >
-          <span className="block h-0.5 w-5 rounded-sm bg-white" />
-          <span className="block h-0.5 w-5 rounded-sm bg-white" />
-          <span className="block h-0.5 w-5 rounded-sm bg-white" />
+          {isOpen ? (
+            /* × close icon */
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
+              <line x1="18" y1="6"  x2="6"  y2="18" />
+              <line x1="6"  y1="6"  x2="18" y2="18" />
+            </svg>
+          ) : (
+            /* ☰ hamburger icon */
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" aria-hidden>
+              <line x1="4" y1="7"  x2="20" y2="7"  />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          )}
         </button>
       )}
 
+      {/* ── MOBILE: fullscreen overlay ────────────────────────────────────── */}
       {isMobile && isOpen && (
         <div
-          className="fixed inset-0 z-[90] bg-black/50"
-          aria-hidden
-          onClick={() => setIsOpen(false)}
-          role="presentation"
-        />
+          className={`mnav-overlay fixed inset-0 z-[150] flex flex-col bg-ag-black${overlayVisible ? ' is-open' : ''}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menú de navegación"
+        >
+          {/* Logo at top */}
+          <div className="flex items-center justify-center px-8 pb-6 pt-16">
+            <img
+              src={logo}
+              alt="AutoGas"
+              className="h-auto w-full max-w-[140px] object-contain opacity-90"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="mx-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Nav items */}
+          <nav className="flex flex-1 flex-col justify-center gap-1 px-8 py-6">
+            {MENU_ITEMS.map((item, i) => {
+              const Icon   = ICONS[item.path] || IconDashboard
+              const active = isActive(item.path)
+              const num    = String(i + 1).padStart(2, '0')
+
+              return (
+                <button
+                  key={item.path}
+                  type="button"
+                  onClick={() => handleNavigate(item.path)}
+                  className={`mnav-item group flex w-full flex-col items-start py-3 text-left transition-colors${
+                    visibleItems.includes(i) ? ' visible' : ''
+                  }`}
+                  style={{ transitionDelay: `${i * 60}ms` }}
+                >
+                  {/* Item number */}
+                  <span
+                    className="mb-0.5 font-barlow-condensed text-xs font-semibold tracking-widest"
+                    style={{ color: '#e30613', fontSize: '0.65rem' }}
+                  >
+                    {num}
+                  </span>
+
+                  {/* Item label + icon */}
+                  <span className="flex items-center gap-3">
+                    <Icon
+                      className={`shrink-0 transition-colors ${
+                        active ? 'text-ag-red' : 'text-white/40 group-hover:text-ag-red'
+                      }`}
+                    />
+                    <span
+                      className={`font-barlow-condensed text-5xl font-bold uppercase leading-none tracking-tight transition-colors ${
+                        active
+                          ? 'text-ag-red'
+                          : 'text-white group-hover:text-ag-red'
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </span>
+                </button>
+              )
+            })}
+          </nav>
+
+          {/* Logout button at bottom */}
+          <div className="px-8 pb-10 pt-2">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full rounded-xl bg-ag-red py-4 font-barlow-condensed text-base font-bold uppercase tracking-[0.2em] text-white transition-opacity hover:opacity-90 active:opacity-80"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
       )}
 
+      {/* ── DESKTOP: fixed sidebar (lg: — unchanged) ──────────────────────── */}
       <nav
-        className={`fixed left-0 top-0 z-[100] flex h-screen w-[220px] flex-col border-r border-white/[0.06] bg-ag-black shadow-2xl shadow-black/40 transition-[left] duration-300 ease-out lg:left-0 lg:shadow-none ${
-          isMobile ? (isOpen ? 'left-0' : '-left-[220px]') : ''
-        }`}
+        className="fixed left-0 top-0 z-[100] hidden h-screen w-[220px] flex-col border-r border-white/[0.06] bg-ag-black shadow-none lg:flex"
         aria-label="Navegación principal"
       >
         <div className="px-6 pb-5 pt-9">
@@ -150,9 +308,9 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         <div className="mx-6 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
 
         <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto py-4">
-          {menuItems.map((item) => {
+          {MENU_ITEMS.map((item) => {
             const active = isActive(item.path)
-            const Icon = ICONS[item.path] || IconDashboard
+            const Icon   = ICONS[item.path] || IconDashboard
             return (
               <button
                 key={item.path}
