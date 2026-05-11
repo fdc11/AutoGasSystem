@@ -215,13 +215,14 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       {/* ── MOBILE: fullscreen overlay ────────────────────────────────────── */}
       {isMobile && isOpen && (
         <div
-          className={`mnav-overlay fixed inset-0 z-[150] flex flex-col bg-ag-black${overlayVisible ? ' is-open' : ''}`}
+          className={`mnav-overlay fixed inset-0 z-[150] flex flex-col bg-ag-black overflow-y-auto${overlayVisible ? ' is-open' : ''}`}
+          style={{ height: '100dvh' }}
           role="dialog"
           aria-modal="true"
           aria-label="Menú de navegación"
         >
           {/* Logo at top */}
-          <div className="flex items-center justify-center px-8 pb-6 pt-16">
+          <div className="flex shrink-0 items-center justify-center px-8 pb-6 pt-16">
             <img
               src={logo}
               alt="AutoGas"
@@ -230,10 +231,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           </div>
 
           {/* Divider */}
-          <div className="mx-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="mx-8 h-px shrink-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-          {/* Nav items */}
-          <nav className="flex flex-1 flex-col justify-center gap-1 px-8 py-6">
+          {/* Nav items — flex-1 so it grows and centers if there's space */}
+          <nav className="flex flex-1 flex-col justify-center gap-1 px-8 py-10">
             {MENU_ITEMS.map((item, i) => {
               const Icon   = ICONS[item.path] || IconDashboard
               const active = isActive(item.path)
@@ -279,8 +280,8 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             })}
           </nav>
 
-          {/* Logout button at bottom */}
-          <div className="px-8 pb-10 pt-2">
+          {/* Logout button at bottom — always visible thanks to overflow-y-auto */}
+          <div className="px-8 pb-12 pt-2" style={{ paddingBottom: 'calc(3rem + env(safe-area-inset-bottom))' }}>
             <button
               type="button"
               onClick={handleLogout}
