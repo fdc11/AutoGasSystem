@@ -56,50 +56,53 @@ export default function Conversiones() {
 
   return (
     <div style={{ fontFamily: 'Barlow, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
-          CONVERSIONES
-        </h1>
+      <div className="conversiones-header">
+        <div>
+          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
+            CONVERSIONES
+          </h1>
+          <div style={{ marginTop: '0.5rem', height: '4px', width: '3.5rem', borderRadius: '9999px', backgroundColor: '#e30613' }} aria-hidden />
+        </div>
         <button
-          onClick={() => navigate('/unidades')} // No hay modal de nueva conversion directa aqui, redirige a unidades
-          style={{ backgroundColor: '#e30613', color: '#ffffff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '2px', fontFamily: 'Barlow, sans-serif', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.2em', cursor: 'pointer' }}
+          className="conversiones-btn-nueva"
+          onClick={() => navigate('/unidades')}
         >
           NUEVA CONVERSIÓN
         </button>
       </div>
 
       {/* Filtros */}
-      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })} style={inputStyle}>
+      <div className="conversiones-filtros">
+        <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })}>
           <option value="">TODAS LAS SEDES</option>
           {SEDES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={filtros.mes} onChange={(e) => setFiltros({ ...filtros, mes: e.target.value })} style={inputStyle}>
+        <select value={filtros.mes} onChange={(e) => setFiltros({ ...filtros, mes: e.target.value })}>
           <option value="">TODOS LOS MESES</option>
           {MESES.map(m => <option key={m.val} value={m.val}>{m.label}</option>)}
         </select>
-        <select value={filtros.anio} onChange={(e) => setFiltros({ ...filtros, anio: e.target.value })} style={inputStyle}>
+        <select value={filtros.anio} onChange={(e) => setFiltros({ ...filtros, anio: e.target.value })}>
           <option value="">TODOS LOS AÑOS</option>
           {ANIOS.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
-        <select value={filtros.estado} onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })} style={inputStyle}>
+        <select value={filtros.estado} onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}>
           <option value="">TODOS LOS ESTADOS</option>
           <option value="Por Convertir">POR CONVERTIR</option>
           <option value="Convertido">CONVERTIDO</option>
         </select>
-        <select value={filtros.tipo} onChange={(e) => setFiltros({ ...filtros, tipo: e.target.value })} style={inputStyle}>
+        <select value={filtros.tipo} onChange={(e) => setFiltros({ ...filtros, tipo: e.target.value })}>
           <option value="">TODOS LOS TIPOS</option>
           {TIPOS_CONVERSION.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
       </div>
 
       {/* Tabla */}
-      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1000px' }}>
+      <div className="conversiones-tabla-wrapper">
+        <table>
           <thead>
             <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
               {['VIN', 'Marca', 'Modelo', 'Sede', 'Tipo', 'Sistema', 'Técnico', 'Fecha Inicio', 'Fecha Fin', 'Estado', 'Acciones'].map(col => (
-                <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666' }}>
+                <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666', whiteSpace: 'nowrap' }}>
                   {col}
                 </th>
               ))}
@@ -108,18 +111,18 @@ export default function Conversiones() {
           <tbody>
             {filtered.map(c => (
               <tr key={c.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.vin}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.marca}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.modelo}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.sede}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.tipoConversion}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.conversion?.sistema || '-'}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.conversion?.tecnico || '-'}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.conversion?.fechaInicio || '-'}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{c.conversion?.fechaFin || '-'}</td>
-                <td style={{ padding: '1rem' }}>{renderBadge(c.estado)}</td>
-                <td style={{ padding: '1rem' }}>
-                  <button onClick={() => navigate(`/unidades/${c.vin}`)} style={{ backgroundColor: 'transparent', border: '1px solid #e0e0e0', color: '#1a1a1a', padding: '0.25rem 0.75rem', borderRadius: '2px', cursor: 'pointer', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.vin}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.marca}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.modelo}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.sede}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.tipoConversion}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.conversion?.sistema || '-'}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.conversion?.tecnico || '-'}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.conversion?.fechaInicio || '-'}</td>
+                <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{c.conversion?.fechaFin || '-'}</td>
+                <td style={{ padding: '0.875rem 1rem' }}>{renderBadge(c.estado)}</td>
+                <td style={{ padding: '0.875rem 1rem' }}>
+                  <button onClick={() => navigate(`/unidades/${c.vin}`)} style={{ backgroundColor: 'transparent', border: '1px solid #e0e0e0', color: '#1a1a1a', padding: '0.25rem 0.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', minHeight: '36px' }}>
                     VER
                   </button>
                 </td>

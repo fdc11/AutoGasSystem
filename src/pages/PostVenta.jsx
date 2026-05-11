@@ -66,19 +66,22 @@ export default function PostVenta() {
 
   return (
     <div style={{ fontFamily: 'Barlow, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
-          POST-VENTA
-        </h1>
+      <div className="conversiones-header">
+        <div>
+          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
+            POST-VENTA
+          </h1>
+          <div style={{ marginTop: '0.5rem', height: '4px', width: '3.5rem', borderRadius: '9999px', backgroundColor: '#e30613' }} aria-hidden />
+        </div>
       </div>
 
       {/* Filtros */}
-      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })} style={inputStyle}>
+      <div className="conversiones-filtros">
+        <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })}>
           <option value="">TODAS LAS SEDES</option>
           {SEDES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={filtros.estado} onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })} style={inputStyle}>
+        <select value={filtros.estado} onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}>
           <option value="">TODOS LOS ESTADOS</option>
           <option value="AL DÍA">AL DÍA</option>
           <option value="POR VENCER">POR VENCER</option>
@@ -88,12 +91,12 @@ export default function PostVenta() {
       </div>
 
       {/* Tabla */}
-      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1000px' }}>
+      <div className="conversiones-tabla-wrapper">
+        <table>
           <thead>
             <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
               {['VIN', 'Placa', 'Marca', 'Sede', 'Fecha Chip', 'Fecha Primer Anual', 'Estado Garantía', 'Observaciones'].map(col => (
-                <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666' }}>
+                <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666', whiteSpace: 'nowrap' }}>
                   {col}
                 </th>
               ))}
@@ -104,14 +107,14 @@ export default function PostVenta() {
               const estadoAlerta = getEstadoAlerta(u.postVenta.fechaPrimerAnual)
               return (
                 <tr key={u.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.vin}</td>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.placa || '-'}</td>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.marca}</td>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.sede}</td>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.postVenta.fechaChip || '-'}</td>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.postVenta.fechaPrimerAnual || '-'}</td>
-                  <td style={{ padding: '1rem' }}>{renderBadge(estadoAlerta)}</td>
-                  <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.postVenta.observaciones || '-'}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.vin}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.placa || '-'}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.marca}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.sede}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.postVenta.fechaChip || '-'}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.postVenta.fechaPrimerAnual || '-'}</td>
+                  <td style={{ padding: '0.875rem 1rem' }}>{renderBadge(estadoAlerta)}</td>
+                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.postVenta.observaciones || '-'}</td>
                 </tr>
               )
             })}

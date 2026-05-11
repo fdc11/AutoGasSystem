@@ -116,9 +116,9 @@ export default function Facturacion() {
 
   return (
     <div style={{ fontFamily: 'Barlow, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div className="conversiones-header">
         <div>
-          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
+          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
             FACTURACIÓN
           </h1>
           <p style={{ color: '#666666', fontSize: '0.85rem', marginTop: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
@@ -126,8 +126,8 @@ export default function Facturacion() {
           </p>
         </div>
         <button
+          className="conversiones-btn-nueva"
           onClick={() => setModalOpen(true)}
-          style={{ backgroundColor: '#e30613', color: '#ffffff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '2px', fontFamily: 'Barlow, sans-serif', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.2em', cursor: 'pointer' }}
         >
           NUEVA FACTURA
         </button>
@@ -141,26 +141,26 @@ export default function Facturacion() {
 
       {tab === 'TODAS' && (
         <>
-          <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })} style={{ ...inputStyle, width: 'auto' }}>
+          <div className="conversiones-filtros">
+            <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })}>
               <option value="">TODAS LAS SEDES</option>
               {SEDES.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
-            <select value={filtros.mes} onChange={(e) => setFiltros({ ...filtros, mes: e.target.value })} style={{ ...inputStyle, width: 'auto' }}>
+            <select value={filtros.mes} onChange={(e) => setFiltros({ ...filtros, mes: e.target.value })}>
               <option value="">TODOS LOS MESES</option>
               {MESES.map(m => <option key={m.val} value={m.val}>{m.label}</option>)}
             </select>
-            <select value={filtros.concesionaria} onChange={(e) => setFiltros({ ...filtros, concesionaria: e.target.value })} style={{ ...inputStyle, width: 'auto' }}>
+            <select value={filtros.concesionaria} onChange={(e) => setFiltros({ ...filtros, concesionaria: e.target.value })}>
               <option value="">TODAS LAS CONCESIONARIAS</option>
               {CONCESIONARIAS.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
-          <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1000px' }}>
+          <div className="conversiones-tabla-wrapper">
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                   {['N° Factura', 'Receptor', 'VIN', 'Monto', 'Condición', 'Fecha Emisión', 'Fecha Vencimiento', 'Estado'].map(col => (
-                    <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666' }}>
+                    <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666', whiteSpace: 'nowrap' }}>
                       {col}
                     </th>
                   ))}
@@ -169,14 +169,14 @@ export default function Facturacion() {
               <tbody>
                 {filteredTodas.map(u => (
                   <tr key={u.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.numeroFactura}</td>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.receptor}</td>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.vin}</td>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>${Number(u.facturacion.monto).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.condicion}</td>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.fechaEmision}</td>
-                    <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.fechaVencimiento}</td>
-                    <td style={{ padding: '1rem' }}>{renderBadge(u.facturacion.fechaVencimiento, u.facturacion.estado)}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.numeroFactura}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.receptor}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.vin}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>${Number(u.facturacion.monto).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.condicion}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.fechaEmision}</td>
+                    <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.fechaVencimiento}</td>
+                    <td style={{ padding: '0.875rem 1rem' }}>{renderBadge(u.facturacion.fechaVencimiento, u.facturacion.estado)}</td>
                   </tr>
                 ))}
                 {filteredTodas.length === 0 && (
@@ -196,8 +196,8 @@ export default function Facturacion() {
             Object.entries(pendientesAgrupadas).map(([receptor, lista]) => {
               const totalGrupo = lista.reduce((acc, u) => acc + Number(u.facturacion.monto || 0), 0)
               return (
-                <div key={receptor} style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid #e0e0e0', paddingBottom: '1rem' }}>
+                <div key={receptor} style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '12px', padding: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid #e0e0e0', paddingBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '1.5rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
                       {receptor}
                     </h2>
@@ -205,29 +205,31 @@ export default function Facturacion() {
                       ${totalGrupo.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </p>
                   </div>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        {['N° Factura', 'VIN', 'Monto', 'Fecha Emisión', 'Fecha Vencimiento', 'Estado'].map(col => (
-                          <th key={col} style={{ padding: '0.75rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666' }}>
-                            {col}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {lista.map(u => (
-                        <tr key={u.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                          <td style={{ padding: '0.75rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.numeroFactura}</td>
-                          <td style={{ padding: '0.75rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.vin}</td>
-                          <td style={{ padding: '0.75rem', color: '#1a1a1a', fontSize: '0.85rem' }}>${Number(u.facturacion.monto).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                          <td style={{ padding: '0.75rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.fechaEmision}</td>
-                          <td style={{ padding: '0.75rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.facturacion.fechaVencimiento}</td>
-                          <td style={{ padding: '0.75rem' }}>{renderBadge(u.facturacion.fechaVencimiento, u.facturacion.estado)}</td>
+                  <div className="conversiones-tabla-wrapper">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                          {['N° Factura', 'VIN', 'Monto', 'Fecha Emisión', 'Fecha Vencimiento', 'Estado'].map(col => (
+                            <th key={col} style={{ padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666', whiteSpace: 'nowrap' }}>
+                              {col}
+                            </th>
+                          ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {lista.map(u => (
+                          <tr key={u.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                            <td style={{ padding: '0.75rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.numeroFactura}</td>
+                            <td style={{ padding: '0.75rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.vin}</td>
+                            <td style={{ padding: '0.75rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>${Number(u.facturacion.monto).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td style={{ padding: '0.75rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.fechaEmision}</td>
+                            <td style={{ padding: '0.75rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.facturacion.fechaVencimiento}</td>
+                            <td style={{ padding: '0.75rem 1rem' }}>{renderBadge(u.facturacion.fechaVencimiento, u.facturacion.estado)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )
             })
