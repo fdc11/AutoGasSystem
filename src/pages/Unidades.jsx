@@ -88,178 +88,155 @@ export default function Unidades() {
 
   const renderBadge = (estado) => {
     const isConvertido = estado === 'Convertido'
-    const bg = isConvertido ? 'rgba(34,197,94,0.15)' : 'rgba(245,158,11,0.15)'
-    const color = isConvertido ? '#22c55e' : '#f59e0b'
+    const bg = isConvertido ? 'bg-emerald-500/15' : 'bg-amber-500/15'
+    const color = isConvertido ? 'text-emerald-600' : 'text-amber-600'
     return (
-      <span style={{
-        backgroundColor: bg, color: color, padding: '0.25rem 0.5rem',
-        borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700',
-        textTransform: 'uppercase', letterSpacing: '0.05em'
-      }}>
+      <span className={`inline-block rounded-md px-2 py-1 text-[0.7rem] font-bold uppercase tracking-wide ${bg} ${color}`}>
         {estado}
       </span>
     )
   }
 
+  const filterClass =
+    'min-h-[44px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-ag-ink outline-none transition-colors focus:border-ag-red focus:ring-2 focus:ring-ag-red/20 box-border font-barlow'
+
   const inputStyle = {
     width: '100%',
-    padding: '0.5rem 0.75rem',
+    padding: '0.65rem 0.85rem',
     backgroundColor: '#ffffff',
-    border: '1px solid #e0e0e0',
-    borderRadius: '2px',
+    border: '1px solid #e5e5e5',
+    borderRadius: '12px',
     color: '#1a1a1a',
     fontFamily: 'Barlow, sans-serif',
-    fontSize: '0.85rem',
+    fontSize: '0.875rem',
     outline: 'none',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
   }
   const labelStyle = {
     display: 'block',
-    marginBottom: '0.25rem',
-    fontSize: '0.75rem',
-    color: '#666666',
+    marginBottom: '0.35rem',
+    fontSize: '0.7rem',
+    fontWeight: '600',
+    color: '#737373',
     textTransform: 'uppercase',
-    letterSpacing: '0.1em'
+    letterSpacing: '0.12em',
   }
 
   return (
-    <div style={{ fontFamily: 'Barlow, sans-serif' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 style={{
-          fontFamily: 'Barlow Condensed, sans-serif', fontSize: '2.5rem', fontWeight: '900',
-          textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0
-        }}>
-          UNIDADES
-        </h1>
+    <div className="font-barlow text-ag-ink">
+      <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-barlow-condensed text-4xl font-black uppercase tracking-tight text-ag-ink sm:text-[2.5rem]">
+            UNIDAD<span className="text-ag-red">ES</span>
+          </h1>
+          <div className="mt-2 h-1 w-14 rounded-full bg-ag-red" aria-hidden />
+        </div>
         <button
+          type="button"
           onClick={() => setModalOpen(true)}
-          style={{
-            backgroundColor: '#e30613', color: '#ffffff', border: 'none', padding: '0.75rem 1.5rem',
-            borderRadius: '2px', fontFamily: 'Barlow, sans-serif', fontWeight: '600', fontSize: '0.85rem',
-            textTransform: 'uppercase', letterSpacing: '0.2em', cursor: 'pointer'
-          }}
+          className="shrink-0 rounded-xl bg-ag-red px-5 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white shadow-card transition-colors hover:bg-ag-red-dark"
         >
-          NUEVA UNIDAD
+          Nueva unidad
         </button>
       </div>
 
-      {/* Filtros */}
-      <div style={{
-        backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px',
-        padding: '1.5rem', marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap'
-      }}>
+      <div className="mb-6 flex flex-wrap gap-3 rounded-2xl border border-neutral-100/90 bg-white p-4 shadow-card-md sm:p-5">
         <input
           type="text"
-          placeholder="BUSCAR POR VIN..."
+          placeholder="Buscar por VIN…"
           value={searchVin}
           onChange={(e) => setSearchVin(e.target.value)}
-          style={{ ...inputStyle, flex: 1, minWidth: '200px' }}
+          className={`${filterClass} min-w-[200px] flex-1`}
         />
         <select
           value={filtros.sede}
           onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })}
-          style={{ ...inputStyle, width: 'auto' }}
+          className={`${filterClass} w-full min-w-[160px] sm:w-auto`}
         >
-          <option value="">TODAS LAS SEDES</option>
+          <option value="">Todas las sedes</option>
           {SEDES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
         <select
           value={filtros.estado}
           onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}
-          style={{ ...inputStyle, width: 'auto' }}
+          className={`${filterClass} w-full min-w-[160px] sm:w-auto`}
         >
-          <option value="">TODOS LOS ESTADOS</option>
-          <option value="Por Convertir">POR CONVERTIR</option>
-          <option value="Convertido">CONVERTIDO</option>
+          <option value="">Todos los estados</option>
+          <option value="Por Convertir">Por convertir</option>
+          <option value="Convertido">Convertido</option>
         </select>
         <select
           value={filtros.tipo}
           onChange={(e) => setFiltros({ ...filtros, tipo: e.target.value })}
-          style={{ ...inputStyle, width: 'auto' }}
+          className={`${filterClass} w-full min-w-[120px] sm:w-auto`}
         >
-          <option value="">TODOS LOS TIPOS</option>
+          <option value="">Todos los tipos</option>
           {TIPOS_CONVERSION.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
         <select
           value={filtros.concesionaria}
           onChange={(e) => setFiltros({ ...filtros, concesionaria: e.target.value })}
-          style={{ ...inputStyle, width: 'auto' }}
+          className={`${filterClass} w-full min-w-[180px] sm:w-auto`}
         >
-          <option value="">TODAS LAS CONCESIONARIAS</option>
+          <option value="">Todas las concesionarias</option>
           {CONCESIONARIAS.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
 
-      {/* Tabla */}
-      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px', overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1000px' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-              {['VIN', 'Marca', 'Modelo', 'Año', 'Color', 'Sede', 'Concesionaria', 'Tipo', 'Estado', 'Fecha Ingreso', 'Acciones'].map(col => (
-                <th key={col} style={{
-                  padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600',
-                  letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666'
-                }}>
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
+      <div className="overflow-hidden rounded-2xl border border-neutral-100/90 bg-white shadow-card-md">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1000px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-neutral-200/90 bg-neutral-50/60">
+                {['VIN', 'Marca', 'Modelo', 'Año', 'Color', 'Sede', 'Concesionaria', 'Tipo', 'Estado', 'Fecha Ingreso', 'Acciones'].map(col => (
+                  <th key={col} className="px-4 py-3.5 text-left text-[0.65rem] font-semibold uppercase tracking-widest text-neutral-500 sm:px-5">
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
             {filtered.map(u => (
-              <tr key={u.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.vin}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.marca}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.modelo}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.anio}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.color}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.sede}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.concesionaria}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.tipoConversion}</td>
-                <td style={{ padding: '1rem' }}>{renderBadge(u.estado)}</td>
-                <td style={{ padding: '1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.fechaIngreso}</td>
-                <td style={{ padding: '1rem' }}>
+              <tr key={u.id} className="border-b border-neutral-100 transition-colors last:border-0 hover:bg-neutral-50/40">
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.vin}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.marca}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.modelo}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.anio}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.color}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.sede}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.concesionaria}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.tipoConversion}</td>
+                <td className="px-4 py-3.5 sm:px-5">{renderBadge(u.estado)}</td>
+                <td className="px-4 py-3.5 text-sm text-ag-ink sm:px-5">{u.fechaIngreso}</td>
+                <td className="px-4 py-3.5 sm:px-5">
                   <button
+                    type="button"
                     onClick={() => navigate(`/unidades/${u.vin}`)}
-                    style={{
-                      backgroundColor: 'transparent', border: '1px solid #e0e0e0', color: '#1a1a1a',
-                      padding: '0.25rem 0.75rem', borderRadius: '2px', cursor: 'pointer', fontSize: '0.75rem',
-                      textTransform: 'uppercase', letterSpacing: '0.1em'
-                    }}
+                    className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ag-ink transition-colors hover:border-ag-red hover:text-ag-red"
                   >
-                    VER
+                    Ver
                   </button>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={11} style={{ padding: '2rem', textAlign: 'center', color: '#666666' }}>
+                <td colSpan={11} className="px-5 py-12 text-center text-sm text-neutral-500">
                   No hay unidades que coincidan con los filtros
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Modal Nueva Unidad */}
       {modalOpen && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex',
-          alignItems: 'center', justifyContent: 'center'
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', borderRadius: '4px',
-            padding: '2rem', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto'
-          }}>
-            <h2 style={{
-              fontFamily: 'Barlow Condensed, sans-serif', fontSize: '1.5rem', fontWeight: '800',
-              textTransform: 'uppercase', letterSpacing: '0.1em', color: '#1a1a1a', margin: '0 0 1.5rem 0'
-            }}>
-              NUEVA UNIDAD
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/75 p-4 backdrop-blur-[2px]">
+          <div className="max-h-[90vh] w-full max-w-[600px] overflow-y-auto rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-card-md sm:p-8">
+            <h2 className="mb-6 font-barlow-condensed text-2xl font-extrabold uppercase tracking-wide text-ag-ink">
+              Nueva unidad
             </h2>
             <form onSubmit={handleGuardar} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div style={{ gridColumn: '1 / -1' }}>
@@ -344,27 +321,19 @@ export default function Unidades() {
                 <textarea value={form.observacionRecepcion} onChange={e => setForm({ ...form, observacionRecepcion: e.target.value })} style={{ ...inputStyle, minHeight: '60px', resize: 'vertical' }} />
               </div>
 
-              <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+              <div className="col-span-full mt-4 flex flex-wrap justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  style={{
-                    backgroundColor: 'transparent', color: '#1a1a1a', border: '1px solid #e0e0e0',
-                    padding: '0.75rem 1.5rem', borderRadius: '2px', fontFamily: 'Barlow, sans-serif',
-                    fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer'
-                  }}
+                  className="rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold uppercase tracking-wide text-ag-ink transition-colors hover:border-neutral-300"
                 >
-                  CANCELAR
+                  Cancelar
                 </button>
                 <button
                   type="submit"
-                  style={{
-                    backgroundColor: '#e30613', color: '#ffffff', border: 'none', padding: '0.75rem 1.5rem',
-                    borderRadius: '2px', fontFamily: 'Barlow, sans-serif', fontWeight: '600', fontSize: '0.85rem',
-                    textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer'
-                  }}
+                  className="rounded-xl bg-ag-red px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-card transition-colors hover:bg-ag-red-dark"
                 >
-                  GUARDAR
+                  Guardar
                 </button>
               </div>
             </form>

@@ -7,13 +7,13 @@ function getInitials(email) {
 
 export default function MainHeader({ usuario }) {
   return (
-    <header className="mb-8 flex flex-col gap-3 border-b border-neutral-200 bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+    <header className="mb-8 flex flex-col gap-3 border-b border-neutral-200/90 bg-white px-4 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between lg:px-8">
       <div className="order-2 flex items-center gap-4 sm:order-1">
         <span className="font-barlow text-sm font-semibold text-ag-ink sm:text-base">
           Bienvenido, {usuario?.email?.split('@')[0] || 'Usuario'}
         </span>
         <div
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ag-red font-barlow-condensed text-lg font-bold text-white sm:h-10 sm:w-10 sm:text-xl"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ag-red font-barlow-condensed text-lg font-bold text-white shadow-md ring-2 ring-white sm:h-10 sm:w-10 sm:text-xl"
           aria-hidden
         >
           {getInitials(usuario?.email)}

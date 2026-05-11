@@ -80,3 +80,16 @@ textarea:focus {
   border-color: #e30613 !important;
   outline: none;
 }
+
+/* Login: evitar fondo gris/amarillo del autofill del navegador */
+@layer components {
+  .login-page input:-webkit-autofill,
+  .login-page input:-webkit-autofill:hover,
+  .login-page input:-webkit-autofill:focus,
+  .login-page input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #1a1a1a !important;
+    caret-color: #1a1a1a;
+  }
+}

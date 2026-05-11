@@ -115,7 +115,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed left-4 top-4 z-[200] flex flex-col gap-1 rounded-md bg-ag-red px-3 py-2 shadow-card"
+          className="fixed left-4 top-4 z-[200] flex flex-col gap-1 rounded-xl bg-ag-red px-3 py-2.5 shadow-card-md ring-2 ring-white/10"
           aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
         >
           <span className="block h-0.5 w-5 rounded-sm bg-white" />
@@ -134,20 +134,20 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       )}
 
       <nav
-        className={`fixed left-0 top-0 z-[100] flex h-screen w-[220px] flex-col border-r border-white/[0.08] bg-ag-black transition-[left] duration-300 ease-out lg:left-0 ${
+        className={`fixed left-0 top-0 z-[100] flex h-screen w-[220px] flex-col border-r border-white/[0.06] bg-ag-black shadow-2xl shadow-black/40 transition-[left] duration-300 ease-out lg:left-0 lg:shadow-none ${
           isMobile ? (isOpen ? 'left-0' : '-left-[220px]') : ''
         }`}
         aria-label="Navegación principal"
       >
-        <div className="px-6 pb-4 pt-8">
+        <div className="px-6 pb-5 pt-9">
           <img
             src={logo}
             alt="AutoGas"
-            className="mx-auto h-auto w-full max-w-[148px] object-contain"
+            className="mx-auto h-auto w-full max-w-[152px] object-contain opacity-[0.98]"
           />
         </div>
 
-        <div className="mx-6 h-px bg-white/[0.08]" />
+        <div className="mx-6 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
 
         <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto py-4">
           {menuItems.map((item) => {
@@ -158,10 +158,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 key={item.path}
                 type="button"
                 onClick={() => handleNavigate(item.path)}
-                className={`flex w-full items-center gap-3 border-l-[3px] py-3 pl-5 pr-4 text-left font-barlow text-[0.8125rem] font-semibold uppercase tracking-[0.12em] transition-colors ${
+                className={`flex w-full items-center gap-3 border-l-[3px] py-3.5 pl-5 pr-4 text-left font-barlow text-[0.8125rem] font-semibold uppercase tracking-[0.12em] transition-colors ${
                   active
-                    ? 'border-ag-red bg-ag-red/[0.08] text-white'
-                    : 'border-transparent text-ag-gray hover:bg-white/[0.04] hover:text-white'
+                    ? 'border-ag-red bg-ag-red/[0.12] text-white'
+                    : 'border-transparent text-ag-gray hover:bg-white/[0.06] hover:text-white'
                 }`}
               >
                 <Icon className={`shrink-0 ${active ? 'text-ag-red' : 'text-current'}`} />
@@ -175,7 +175,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full rounded border border-white/[0.08] bg-transparent py-3 font-barlow text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-ag-red hover:bg-ag-red"
+            className="w-full rounded-xl border border-white/[0.1] bg-white/[0.03] py-3 font-barlow text-xs font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:border-ag-red hover:bg-ag-red"
           >
             Cerrar Sesión
           </button>

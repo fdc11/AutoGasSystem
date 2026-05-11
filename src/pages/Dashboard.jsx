@@ -77,11 +77,12 @@ export default function Dashboard() {
 
   return (
     <div className="font-barlow text-ag-ink">
-      <header className="mb-8">
+      <header className="mb-10">
         <h1 className="font-barlow-condensed text-4xl font-black uppercase tracking-tight text-ag-ink sm:text-[2.5rem]">
           Dash<span className="text-ag-red">board</span>
         </h1>
-        <p className="mt-2 text-sm uppercase tracking-widest text-neutral-500">
+        <div className="mt-3 h-1 w-14 rounded-full bg-ag-red" aria-hidden />
+        <p className="mt-4 text-sm uppercase tracking-widest text-neutral-500">
           Resumen operativo — AutoGas Sistema
         </p>
       </header>
@@ -90,7 +91,7 @@ export default function Dashboard() {
         {kpiList.map((kpi) => (
           <div
             key={kpi.titulo}
-            className="rounded-lg border border-neutral-100 bg-white p-6 shadow-card"
+            className="rounded-2xl border border-neutral-100/90 bg-white p-6 shadow-card-md transition-shadow hover:shadow-card"
           >
             <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-widest text-neutral-500">
               {kpi.titulo}
@@ -103,8 +104,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-neutral-100 bg-white shadow-card">
-        <div className="border-b border-neutral-200 px-6 py-5">
+      <div className="overflow-hidden rounded-2xl border border-neutral-100/90 bg-white shadow-card-md">
+        <div className="border-b border-neutral-200/90 bg-neutral-50/50 px-6 py-5">
           <h2 className="font-barlow-condensed text-lg font-bold uppercase tracking-widest text-ag-ink">
             Últimas unidades registradas
           </h2>
