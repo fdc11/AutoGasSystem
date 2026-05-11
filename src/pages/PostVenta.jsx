@@ -1,132 +1,117 @@
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../firebase/config'
+import { SEDES } from '../constants/datos'
+import Badge from '../components/Badge'
+import PageHeader from '../components/PageHeader'
 
-const SEDES = ['ICA', 'HUANCAYO', 'LIMA', 'NAZCA', 'CHINCHA', 'TRUJILLO', 'AYACUCHO']
+const FILTER = 'min-h-[44px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-ag-ink outline-none transition focus:border-ag-red focus:ring-2 focus:ring-ag-red/20 font-barlow flex-1 min-w-[140px]'
+const TABLE_COLS = ['VIN', 'Placa', 'Marca', 'Sede', 'Fecha Chip', 'Fecha Primer Anual', 'Estado Garantía', 'Observaciones']
+
+function getEstadoAlerta(fechaPrimerAnual) {
+  if (!fechaPrimerAnual) return 'Sin fecha'
+  const diff = (new Date(fechaPrimerAnual) - new Date()) / (1000 * 60 * 60 * 24)
+  if (diff < 0) return 'Vencido'
+  if (diff <= 30) return 'Por vencer'
+  return 'Al día'
+}
 
 export default function PostVenta() {
   const [unidades, setUnidades] = useState([])
+  const [loading, setLoading] = useState(true)
   const [filtros, setFiltros] = useState({ sede: '', estado: '' })
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'unidades'), (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-      // Filtrar unidades que tienen postventa con alguna fecha
-      const conPostVenta = docs.filter(d => d.postVenta && (d.postVenta.fechaChip || d.postVenta.fechaPrimerAnual || d.postVenta.fechaGarantia))
-      setUnidades(conPostVenta)
+      const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+      setUnidades(
+        docs.filter((d) => d.postVenta?.fechaChip || d.postVenta?.fechaPrimerAnual || d.postVenta?.fechaGarantia)
+      )
+      setLoading(false)
     })
     return () => unsub()
   }, [])
 
-  const getEstadoAlerta = (fechaPrimerAnual) => {
-    if (!fechaPrimerAnual) return 'SIN FECHA'
-    const hoy = new Date()
-    const fAnual = new Date(fechaPrimerAnual)
-    const diffDays = (fAnual - hoy) / (1000 * 60 * 60 * 24)
-    if (diffDays < 0) return 'VENCIDO'
-    if (diffDays <= 30) return 'POR VENCER'
-    return 'AL DÍA'
-  }
-
-  const filtered = unidades.filter(u => {
+  const filtered = unidades.filter((u) => {
     if (filtros.sede && u.sede !== filtros.sede) return false
-    if (filtros.estado) {
-      const estado = getEstadoAlerta(u.postVenta.fechaPrimerAnual)
-      if (estado !== filtros.estado) return false
-    }
+    if (filtros.estado && getEstadoAlerta(u.postVenta?.fechaPrimerAnual) !== filtros.estado) return false
     return true
   })
 
-  const renderBadge = (estado) => {
-    let bg = 'rgba(255,255,255,0.1)'
-    let color = '#ffffff'
-    
-    if (estado === 'AL DÍA') {
-      bg = 'rgba(34,197,94,0.15)'
-      color = '#22c55e'
-    } else if (estado === 'POR VENCER') {
-      bg = 'rgba(245,158,11,0.15)'
-      color = '#f59e0b'
-    } else if (estado === 'VENCIDO') {
-      bg = 'rgba(227,6,19,0.15)'
-      color = '#e30613'
-    } else if (estado === 'SIN FECHA') {
-      bg = 'rgba(255,255,255,0.05)'
-      color = '#888888'
-    }
-
-    return (
-      <span style={{ backgroundColor: bg, color: color, padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
-        {estado}
-      </span>
-    )
-  }
-
-  const inputStyle = { padding: '0.5rem 0.75rem', backgroundColor: '#ffffff', border: '1px solid #e0e0e0', borderRadius: '2px', color: '#1a1a1a', fontFamily: 'Barlow, sans-serif', fontSize: '0.85rem', outline: 'none' }
+  const setF = (k, v) => setFiltros((f) => ({ ...f, [k]: v }))
 
   return (
-    <div style={{ fontFamily: 'Barlow, sans-serif' }}>
-      <div className="conversiones-header">
-        <div>
-          <h1 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#1a1a1a', margin: 0 }}>
-            POST-VENTA
-          </h1>
-          <div style={{ marginTop: '0.5rem', height: '4px', width: '3.5rem', borderRadius: '9999px', backgroundColor: '#e30613' }} aria-hidden />
-        </div>
-      </div>
+    <div className="font-barlow text-ag-ink">
+      <PageHeader title="POST-VENTA" />
 
       {/* Filtros */}
-      <div className="conversiones-filtros">
-        <select value={filtros.sede} onChange={(e) => setFiltros({ ...filtros, sede: e.target.value })}>
-          <option value="">TODAS LAS SEDES</option>
-          {SEDES.map(s => <option key={s} value={s}>{s}</option>)}
+      <div className="mb-6 flex flex-wrap gap-3 rounded-2xl border border-neutral-100/90 bg-white p-4 shadow-card-md sm:p-5">
+        <select value={filtros.sede} onChange={(e) => setF('sede', e.target.value)} className={FILTER}>
+          <option value="">Todas las sedes</option>
+          {SEDES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
-        <select value={filtros.estado} onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}>
-          <option value="">TODOS LOS ESTADOS</option>
-          <option value="AL DÍA">AL DÍA</option>
-          <option value="POR VENCER">POR VENCER</option>
-          <option value="VENCIDO">VENCIDO</option>
-          <option value="SIN FECHA">SIN FECHA</option>
+        <select value={filtros.estado} onChange={(e) => setF('estado', e.target.value)} className={FILTER}>
+          <option value="">Todos los estados</option>
+          <option value="Al día">Al día</option>
+          <option value="Por vencer">Por vencer</option>
+          <option value="Vencido">Vencido</option>
+          <option value="Sin fecha">Sin fecha</option>
         </select>
       </div>
 
       {/* Tabla */}
-      <div className="conversiones-tabla-wrapper">
-        <table>
-          <thead>
-            <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-              {['VIN', 'Placa', 'Marca', 'Sede', 'Fecha Chip', 'Fecha Primer Anual', 'Estado Garantía', 'Observaciones'].map(col => (
-                <th key={col} style={{ padding: '1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666666', whiteSpace: 'nowrap' }}>
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map(u => {
-              const estadoAlerta = getEstadoAlerta(u.postVenta.fechaPrimerAnual)
-              return (
-                <tr key={u.id} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.vin}</td>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.placa || '-'}</td>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.marca}</td>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.sede}</td>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.postVenta.fechaChip || '-'}</td>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{u.postVenta.fechaPrimerAnual || '-'}</td>
-                  <td style={{ padding: '0.875rem 1rem' }}>{renderBadge(estadoAlerta)}</td>
-                  <td style={{ padding: '0.875rem 1rem', color: '#1a1a1a', fontSize: '0.85rem' }}>{u.postVenta.observaciones || '-'}</td>
-                </tr>
-              )
-            })}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={8} style={{ padding: '2rem', textAlign: 'center', color: '#666666' }}>
-                  No hay registros de post-venta con estos filtros.
-                </td>
+      <div className="overflow-hidden rounded-2xl border border-neutral-100/90 bg-white shadow-card-md">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[900px] border-collapse text-left">
+            <thead>
+              <tr className="border-b border-neutral-200/90 bg-neutral-50/60">
+                {TABLE_COLS.map((col) => (
+                  <th key={col} className="px-5 py-3.5 text-[0.65rem] font-semibold uppercase tracking-widest text-neutral-500">
+                    {col}
+                  </th>
+                ))}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="border-b border-neutral-100">
+                    {TABLE_COLS.map((c) => (
+                      <td key={c} className="px-5 py-4">
+                        <div className="h-4 animate-pulse rounded bg-neutral-100" />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <>
+                  {filtered.map((u) => {
+                    const estado = getEstadoAlerta(u.postVenta?.fechaPrimerAnual)
+                    return (
+                      <tr key={u.id} className="border-b border-neutral-100 transition-colors last:border-0 hover:bg-neutral-50/40">
+                        <td className="px-5 py-3.5 text-sm font-medium text-ag-ink">{u.vin}</td>
+                        <td className="px-5 py-3.5 text-sm text-ag-ink">{u.placa || '—'}</td>
+                        <td className="px-5 py-3.5 text-sm text-ag-ink">{u.marca}</td>
+                        <td className="px-5 py-3.5 text-sm text-ag-ink">{u.sede}</td>
+                        <td className="px-5 py-3.5 text-sm text-ag-ink">{u.postVenta?.fechaChip || '—'}</td>
+                        <td className="px-5 py-3.5 text-sm text-ag-ink">{u.postVenta?.fechaPrimerAnual || '—'}</td>
+                        <td className="px-5 py-3.5"><Badge status={estado} /></td>
+                        <td className="px-5 py-3.5 max-w-[200px] truncate text-sm text-ag-ink">{u.postVenta?.observaciones || '—'}</td>
+                      </tr>
+                    )
+                  })}
+                  {filtered.length === 0 && (
+                    <tr>
+                      <td colSpan={TABLE_COLS.length} className="px-5 py-12 text-center text-sm text-neutral-500">
+                        No hay registros de post-venta con estos filtros.
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
