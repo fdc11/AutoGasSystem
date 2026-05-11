@@ -31,6 +31,8 @@ export function AuthProvider({ children }) {
   )
 }
 
+// Hook is intentionally exported from this module alongside AuthProvider.
+// eslint-disable-next-line react-refresh/only-export-components -- shared context hook
 export function useAuth() {
   return useContext(AuthContext)
 }

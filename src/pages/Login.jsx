@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import logo from '../assets/AutoGasLogo.png'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -17,7 +18,7 @@ export default function Login() {
     try {
       await login(email, password)
       navigate('/dashboard')
-    } catch (err) {
+    } catch {
       setError('Correo o contraseña incorrectos')
     } finally {
       setLoading(false)
@@ -25,233 +26,92 @@ export default function Login() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      fontFamily: 'Barlow, sans-serif'
-    }}>
-      {/* Left Panel - Black with Logo and Slogan */}
-      <div style={{
-        width: '45%',
-        backgroundColor: '#080808',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-        '@media (max-width: 768px)': {
-          display: 'none'
-        }
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{
-            fontFamily: 'Barlow Condensed, sans-serif',
-            fontSize: '4rem',
-            fontWeight: 900,
-            letterSpacing: '0.05em',
-            color: '#ffffff',
-            textTransform: 'uppercase',
-            lineHeight: 1,
-            marginBottom: '3rem'
-          }}>
-            AUTO<span style={{ color: '#e30613' }}>GAS</span>
-          </h1>
-          <p style={{
-            fontFamily: 'Barlow Condensed, sans-serif',
-            fontSize: '1.5rem',
-            fontWeight: 600,
-            letterSpacing: '0.1em',
-            color: '#888888',
-            textTransform: 'uppercase',
-            lineHeight: 1.4
-          }}>
+    <div className="flex min-h-screen font-barlow">
+      {/* Left — branding (hidden on mobile) */}
+      <div className="relative hidden flex-col items-center justify-center bg-ag-black px-8 lg:flex lg:w-[45%]">
+        <div className="flex max-w-md flex-col items-center text-center">
+          <img
+            src={logo}
+            alt="AutoGas"
+            className="h-auto w-full max-w-[min(80%,280px)] object-contain"
+          />
+          <p className="mt-10 max-w-sm font-barlow text-lg font-normal leading-relaxed tracking-wide text-white">
             Convierte. Gestiona. Domina.
           </p>
         </div>
       </div>
 
-      {/* Right Panel - White/Gray with Form */}
-      <div style={{
-        width: '55%',
-        backgroundColor: '#f4f7f6',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-        '@media (max-width: 768px)': {
-          width: '100%'
-        }
-      }}>
-        <div style={{
-          backgroundColor: '#ffffff',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          borderRadius: '4px',
-          padding: '3rem 2.5rem',
-          width: '100%',
-          maxWidth: '420px'
-        }}>
-          {/* Mobile Logo - Only visible on small screens */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '2rem',
-            display: 'none',
-            '@media (max-width: 768px)': {
-              display: 'block'
-            }
-          }}>
-            <h1 style={{
-              fontFamily: 'Barlow Condensed, sans-serif',
-              fontSize: '2.5rem',
-              fontWeight: 900,
-              letterSpacing: '0.05em',
-              color: '#1a1a1a',
-              textTransform: 'uppercase',
-              lineHeight: 1
-            }}>
-              AUTO<span style={{ color: '#e30613' }}>GAS</span>
-            </h1>
-          </div>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{
-              fontFamily: 'Barlow Condensed, sans-serif',
-              fontSize: '1.8rem',
-              fontWeight: 700,
-              color: '#1a1a1a',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              margin: '0 0 0.5rem 0'
-            }}>
-              Iniciar Sesión
-            </h2>
-            <p style={{
-              color: '#666666',
-              fontSize: '0.85rem',
-              letterSpacing: '0.05em'
-            }}>
-              Ingresa tus credenciales para acceder
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '0.75rem',
-                fontWeight: '600',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: '#666666',
-                marginBottom: '0.5rem'
-              }}>
-                Correo
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="correo@autogas.pe"
-                required
-                style={{
-                  width: '100%',
-                  backgroundColor: '#ffffff',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '2px',
-                  padding: '0.75rem 1rem',
-                  color: '#1a1a1a',
-                  fontSize: '0.95rem',
-                  fontFamily: 'Barlow, sans-serif',
-                  outline: 'none',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={e => e.target.style.borderColor = '#e30613'}
-                onBlur={e => e.target.style.borderColor = '#e0e0e0'}
-              />
+      {/* Right — form */}
+      <div className="flex w-full flex-col bg-white lg:w-[55%] lg:bg-ag-canvas">
+        <div className="flex flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:px-16">
+          <div className="mx-auto w-full max-w-md rounded-lg border border-neutral-200/80 bg-white p-8 shadow-card sm:p-10">
+            <div className="mb-8 flex justify-center lg:hidden">
+              <img src={logo} alt="AutoGas" className="h-auto w-44 object-contain" />
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '0.75rem',
-                fontWeight: '600',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: '#666666',
-                marginBottom: '0.5rem'
-              }}>
-                Contraseña
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                style={{
-                  width: '100%',
-                  backgroundColor: '#ffffff',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '2px',
-                  padding: '0.75rem 1rem',
-                  color: '#1a1a1a',
-                  fontSize: '0.95rem',
-                  fontFamily: 'Barlow, sans-serif',
-                  outline: 'none',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={e => e.target.style.borderColor = '#e30613'}
-                onBlur={e => e.target.style.borderColor = '#e0e0e0'}
-              />
-            </div>
-
-            {error && (
-              <p style={{
-                color: '#e30613',
-                fontSize: '0.85rem',
-                marginBottom: '1rem',
-                textAlign: 'center'
-              }}>
-                {error}
+            <div className="mb-8">
+              <h1 className="font-barlow-condensed text-2xl font-bold uppercase tracking-wide text-ag-ink sm:text-[1.75rem]">
+                Iniciar sesión
+              </h1>
+              <p className="mt-2 text-sm text-neutral-500">
+                Ingresa tus credenciales para acceder
               </p>
-            )}
+            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: '100%',
-                backgroundColor: loading ? '#cccccc' : '#e30613',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '2px',
-                padding: '0.85rem',
-                fontSize: '0.85rem',
-                fontFamily: 'Barlow, sans-serif',
-                fontWeight: '600',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'background-color 0.2s'
-              }}
-              onMouseEnter={e => { if (!loading) e.target.style.backgroundColor = '#a80310' }}
-              onMouseLeave={e => { if (!loading) e.target.style.backgroundColor = '#e30613' }}
-            >
-              {loading ? 'Ingresando...' : 'Ingresar'}
-            </button>
-          </form>
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div>
+                <label htmlFor="login-email" className="mb-2 block text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  Correo
+                </label>
+                <input
+                  id="login-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="correo@autogas.pe"
+                  required
+                  autoComplete="email"
+                  className="w-full rounded-md border border-neutral-200 bg-white px-4 py-3 text-[0.95rem] text-ag-ink placeholder:text-neutral-400 focus:border-ag-red focus:outline-none focus:ring-1 focus:ring-ag-red"
+                />
+              </div>
 
-          <p style={{
-            textAlign: 'center',
-            color: '#999999',
-            fontSize: '0.75rem',
-            marginTop: '2rem',
-            letterSpacing: '0.05em'
-          }}>
-            © 2026 AutoGas Perú
-          </p>
+              <div>
+                <label htmlFor="login-password" className="mb-2 block text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                  Contraseña
+                </label>
+                <input
+                  id="login-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                  className="w-full rounded-md border border-neutral-200 bg-white px-4 py-3 text-[0.95rem] text-ag-ink placeholder:text-neutral-400 focus:border-ag-red focus:outline-none focus:ring-1 focus:ring-ag-red"
+                />
+              </div>
+
+              {error && (
+                <p className="text-center text-sm text-ag-red" role="alert">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-md bg-ag-red py-3.5 text-sm font-semibold uppercase tracking-widest text-white transition-colors hover:bg-ag-red-dark disabled:cursor-not-allowed disabled:bg-neutral-300"
+              >
+                {loading ? 'Ingresando…' : 'Ingresar'}
+              </button>
+            </form>
+          </div>
         </div>
+
+        <footer className="mt-auto border-t border-neutral-200/60 bg-white px-6 py-5 text-center text-xs text-neutral-400 lg:bg-ag-canvas lg:px-16 lg:py-6">
+          © {new Date().getFullYear()} AutoGas Perú
+        </footer>
       </div>
     </div>
   )
 }
-

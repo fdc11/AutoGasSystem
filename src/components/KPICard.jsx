@@ -1,51 +1,21 @@
-import React from 'react';
-
 const KPICard = ({ titulo, valor, subtitulo, color = '#e30613' }) => {
   return (
-    <div style={{
-      backgroundColor: '#111111',
-      border: '1px solid rgba(255,255,255,0.08)',
-      borderRadius: '4px',
-      padding: '1.5rem'
-    }}>
-      <div style={{
-        fontFamily: "'Barlow', sans-serif",
-        fontWeight: 500,
-        fontSize: '0.7rem',
-        color: '#888888',
-        textTransform: 'uppercase',
-        letterSpacing: '0.15em',
-        marginBottom: '0.5rem'
-      }}>
+    <div className="rounded-lg border border-neutral-100 bg-white p-6 shadow-card">
+      <div className="mb-2 font-barlow text-[0.7rem] font-semibold uppercase tracking-widest text-neutral-500">
         {titulo}
       </div>
-      <div style={{
-        fontFamily: "'Barlow Condensed', sans-serif",
-        fontWeight: 900,
-        fontSize: '2.5rem',
-        color: color,
-        marginBottom: '0.25rem'
-      }}>
+      <div
+        className="mb-1 font-barlow-condensed text-4xl font-black leading-none"
+        style={{ color }}
+      >
         {valor}
       </div>
       {subtitulo && (
-        <div style={{
-          fontFamily: "'Barlow', sans-serif",
-          fontWeight: 400,
-          fontSize: '0.8rem',
-          color: '#888888'
-        }}>
-          {subtitulo}
-        </div>
+        <div className="font-barlow text-sm text-neutral-500">{subtitulo}</div>
       )}
-      <div style={{
-        height: '2px',
-        backgroundColor: color,
-        marginTop: '1rem'
-      }} />
+      <div className="mt-4 h-0.5 rounded-full" style={{ backgroundColor: color }} />
     </div>
-  );
-};
+  )
+}
 
-export default KPICard;
-
+export default KPICard

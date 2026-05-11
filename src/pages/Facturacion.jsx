@@ -40,7 +40,7 @@ export default function Facturacion() {
     if (filtros.concesionaria && u.facturacion.receptor !== filtros.concesionaria) return false
     if (filtros.mes !== '') {
       if (!u.facturacion.fechaEmision) return false
-      const [y, m] = u.facturacion.fechaEmision.split('-')
+      const [, m] = u.facturacion.fechaEmision.split('-')
       if ((parseInt(m, 10) - 1).toString() !== filtros.mes) return false
     }
     return true

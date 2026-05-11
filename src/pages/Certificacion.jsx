@@ -32,7 +32,7 @@ export default function Certificacion() {
     if (filtros.condicion && u.certificacion.condicion !== filtros.condicion) return false
     if (filtros.mes !== '') {
       if (!u.certificacion.fechaEmision) return false
-      const [y, m] = u.certificacion.fechaEmision.split('-')
+      const [, m] = u.certificacion.fechaEmision.split('-')
       if ((parseInt(m, 10) - 1).toString() !== filtros.mes) return false
     }
     return true

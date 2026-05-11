@@ -33,12 +33,7 @@ export default function Conversiones() {
     if (filtros.sede && c.sede !== filtros.sede) return false
     if (filtros.estado && c.estado !== filtros.estado) return false
     if (filtros.tipo && c.tipoConversion !== filtros.tipo) return false
-    
-    const fFin = new Date(c.conversion.fechaFin)
-    // fFin.getMonth() is 0-11, fFin.getFullYear() is YYYY
-    // Wait, the dates might be strings like 'YYYY-MM-DD' depending on how they are saved.
-    // If we parse them to Date, they might shift due to timezone.
-    // Assuming 'YYYY-MM-DD', we can extract the month and year from the string.
+
     const [y, m] = c.conversion.fechaFin.split('-')
     
     if (filtros.mes !== '' && (parseInt(m, 10) - 1).toString() !== filtros.mes) return false

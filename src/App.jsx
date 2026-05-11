@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
@@ -9,82 +9,8 @@ import Conversiones from './pages/Conversiones'
 import Facturacion from './pages/Facturacion'
 import PostVenta from './pages/PostVenta'
 import Certificacion from './pages/Certificacion'
-import Navbar from './components/Navbar'
-
-function Header({ usuario, isMobile }) {
-  const [dateTime, setDateTime] = useState('')
-
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date()
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-      const dateStr = now.toLocaleDateString('es-ES', options)
-      const timeStr = now.toLocaleTimeString('es-ES', { hour12: false })
-      setDateTime(`${dateStr} — ${timeStr}`)
-    }
-    updateDateTime()
-    const interval = setInterval(updateDateTime, 1000)
-    return () => clearInterval(interval)
-  }, [])
-
-  const getInitials = (email) => {
-    if (!email) return 'U'
-    return email.charAt(0).toUpperCase()
-  }
-
-  return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: isMobile ? '1rem' : '1rem 2rem',
-      backgroundColor: '#ffffff',
-      borderBottom: '1px solid #e0e0e0',
-      marginBottom: '2rem',
-      flexDirection: isMobile ? 'column' : 'row',
-      gap: isMobile ? '1rem' : '0'
-    }}>
-      <div style={{
-        fontFamily: 'Barlow, sans-serif',
-        fontSize: isMobile ? '0.75rem' : '0.9rem',
-        color: '#1a1a1a',
-        letterSpacing: '0.05em',
-        textAlign: isMobile ? 'center' : 'left'
-      }}>
-        {dateTime}
-      </div>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem'
-      }}>
-        <span style={{
-          fontFamily: 'Barlow, sans-serif',
-          fontSize: isMobile ? '0.85rem' : '0.9rem',
-          color: '#1a1a1a',
-          fontWeight: '600'
-        }}>
-          Bienvenido, {usuario?.email?.split('@')[0] || 'Usuario'}
-        </span>
-        <div style={{
-          width: isMobile ? '35px' : '40px',
-          height: isMobile ? '35px' : '40px',
-          borderRadius: '50%',
-          backgroundColor: '#e30613',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#ffffff',
-          fontFamily: 'Barlow Condensed, sans-serif',
-          fontSize: isMobile ? '1rem' : '1.2rem',
-          fontWeight: '700'
-        }}>
-          {getInitials(usuario?.email)}
-        </div>
-      </div>
-    </div>
-  )
-}
+import Sidebar from './components/Sidebar'
+import MainHeader from './components/MainHeader'
 
 function RutaProtegida({ children }) {
   const { usuario } = useAuth()
@@ -92,18 +18,11 @@ function RutaProtegida({ children }) {
 
   if (!usuario) return <Navigate to="/login" />
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f7f6' }}>
-      <Navbar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
-      <main style={{
-        flex: 1,
-        overflowY: 'auto',
-        marginLeft: '220px',
-        transition: 'margin-left 0.3s ease'
-      }}>
-        <Header usuario={usuario} />
-        <div style={{ padding: '0 2rem 2rem 2rem' }}>
-          {children}
-        </div>
+    <div className="flex min-h-screen bg-ag-canvas font-barlow text-ag-ink">
+      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto pt-14 transition-[margin] duration-300 lg:ml-[220px] lg:pt-0">
+        <MainHeader usuario={usuario} />
+        <div className="px-4 pb-10 pt-0 lg:px-8">{children}</div>
       </main>
     </div>
   )
