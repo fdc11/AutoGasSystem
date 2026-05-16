@@ -9,6 +9,7 @@ import Conversiones from './pages/Conversiones'
 import Facturacion from './pages/Facturacion'
 import PostVenta from './pages/PostVenta'
 import Certificacion from './pages/Certificacion'
+import Importacion from './pages/Importacion'
 import Sidebar from './components/Sidebar'
 import MainHeader from './components/MainHeader'
 
@@ -42,6 +43,7 @@ function App() {
         <Route path="/facturacion" element={<RutaProtegida><Facturacion /></RutaProtegida>} />
         <Route path="/postventa" element={<RutaProtegida><PostVenta /></RutaProtegida>} />
         <Route path="/certificacion" element={<RutaProtegida><Certificacion /></RutaProtegida>} />
+        <Route path="/importacion" element={<RutaProtegida><Importacion /></RutaProtegida>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

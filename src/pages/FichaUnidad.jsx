@@ -9,7 +9,8 @@ import ConfirmModal from '../components/ConfirmModal'
 import {
   SEDES, CONCESIONARIAS, TIPOS_CONVERSION, SISTEMAS, MODALIDADES, BONOS,
   CERTIFICADORAS, REDUCTORES, ELECTRONICAS, TANQUES, CAPACIDAD_GLP, CAPACIDAD_GNV,
-  CILINDROS, MEDIOS_PAGO, ESTADOS_FACTURA, CONDICION_FOLIO, TIPOS_TANQUE, TIPOS_PAGO
+  CILINDROS, MEDIOS_PAGO, ESTADOS_FACTURA, CONDICION_FOLIO, TIPOS_TANQUE, TIPOS_PAGO,
+  CONDICION_FACTURA
 } from '../constants/datos'
 
 const INPUT = 'w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 font-barlow text-sm text-ag-ink placeholder:text-neutral-400 outline-none transition focus:border-ag-red focus:ring-2 focus:ring-ag-red/20'
@@ -79,6 +80,7 @@ export default function FichaUnidad() {
   const [formCertificacion, setFormCertificacion] = useState({})
   const [formFacturacion, setFormFacturacion] = useState({})
   const [formPostVenta, setFormPostVenta] = useState({})
+  const [formPropietario, setFormPropietario] = useState({})
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'unidades', vin), (docSnap) => {
@@ -121,6 +123,14 @@ export default function FichaUnidad() {
           fechaChip: data.postVenta?.fechaChip || '', fechaPrimerAnual: data.postVenta?.fechaPrimerAnual || '',
           fechaGarantia: data.postVenta?.fechaGarantia || '', detalleGarantia: data.postVenta?.detalleGarantia || '',
           observaciones: data.postVenta?.observaciones || ''
+        })
+
+        setFormPropietario({
+          propietario: data.propietario || '',
+          dniRuc: data.dniRuc || '',
+          telefono: data.telefono || '',
+          kilometraje: data.kilometraje || '',
+          sistemaGas: data.sistemaGas || ''
         })
       }
       setLoading(false)
@@ -244,6 +254,18 @@ export default function FichaUnidad() {
             <DataItem label="Técnico Electrónico" value={unidad.tecnicoElectronico} />
             <DataItem label="Técnico Mecánico" value={unidad.tecnicoMecanico} />
             <DataItem label="Observación Recepción" value={unidad.observacionRecepcion} span />
+          </div>
+        </div>
+
+        {/* PROPIETARIO */}
+        <div className="rounded-2xl border border-neutral-100/90 bg-white p-6 shadow-card-md sm:p-8">
+          <CardTitle title="Propietario" onEdit={() => setModalOpen('propietario')} />
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <DataItem label="Propietario" value={unidad.propietario} />
+            <DataItem label="DNI / RUC" value={unidad.dniRuc} />
+            <DataItem label="Teléfono" value={unidad.telefono} />
+            <DataItem label="Kilometraje" value={unidad.kilometraje} />
+            <DataItem label="Sistema de Gas" value={unidad.sistemaGas} />
           </div>
         </div>
 
@@ -488,6 +510,66 @@ export default function FichaUnidad() {
                 <div className="mt-6 flex justify-end gap-3">
                   <button type="button" onClick={() => setModalOpen(null)} className="rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold uppercase tracking-wide text-ag-ink hover:border-neutral-300">Cancelar</button>
                   <button type="submit" disabled={submitting} className="rounded-xl bg-ag-red px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white hover:bg-ag-red-dark disabled:opacity-60">{submitting ? 'Guardando...' : 'Guardar'}</button>
+                </div>
+              </form>
+            )}
+
+            {/* Modal Propietario */}
+            {modalOpen === 'propietario' && (
+              <form onSubmit={(e) => { 
+                e.preventDefault()
+                registrarHistorial('Actualización de propietario', { 
+                  propietario: formPropietario.propietario,
+                  dniRuc: formPropietario.dniRuc,
+                  telefono: formPropietario.telefono,
+                  kilometraje: formPropietario.kilometraje,
+                  sistemaGas: formPropietario.sistemaGas
+                }) 
+              }}>
+                <h2 className="mb-6 font-barlow-condensed text-2xl font-extrabold uppercase tracking-wide text-ag-ink">
+                  Editar Propietario
+                </h2>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className={LABEL}>Propietario</label>
+                    <input type="text" value={formPropietario.propietario} 
+                      onChange={e => setFormPropietario({...formPropietario, propietario: e.target.value.toUpperCase()})} 
+                      className={INPUT} />
+                  </div>
+                  <div>
+                    <label className={LABEL}>DNI / RUC</label>
+                    <input type="text" value={formPropietario.dniRuc} 
+                      onChange={e => setFormPropietario({...formPropietario, dniRuc: e.target.value})} 
+                      className={INPUT} />
+                  </div>
+                  <div>
+                    <label className={LABEL}>Teléfono</label>
+                    <input type="text" value={formPropietario.telefono} 
+                      onChange={e => setFormPropietario({...formPropietario, telefono: e.target.value})} 
+                      className={INPUT} />
+                  </div>
+                  <div>
+                    <label className={LABEL}>Kilometraje</label>
+                    <input type="text" value={formPropietario.kilometraje} 
+                      onChange={e => setFormPropietario({...formPropietario, kilometraje: e.target.value})} 
+                      className={INPUT} />
+                  </div>
+                  <div>
+                    <label className={LABEL}>Sistema de Gas</label>
+                    <input type="text" value={formPropietario.sistemaGas} 
+                      onChange={e => setFormPropietario({...formPropietario, sistemaGas: e.target.value.toUpperCase()})} 
+                      className={INPUT} />
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end gap-3">
+                  <button type="button" onClick={() => setModalOpen(null)} 
+                    className="rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold uppercase tracking-wide text-ag-ink hover:border-neutral-300">
+                    Cancelar
+                  </button>
+                  <button type="submit" disabled={submitting} 
+                    className="rounded-xl bg-ag-red px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white hover:bg-ag-red-dark disabled:opacity-60">
+                    {submitting ? 'Guardando...' : 'Guardar'}
+                  </button>
                 </div>
               </form>
             )}

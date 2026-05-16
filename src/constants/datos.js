@@ -47,6 +47,8 @@ export const MEDIOS_PAGO = ['EFECTIVO', 'YAPE/PLIN', 'DEPÓSITO BANCARIO']
 
 export const ESTADOS_FACTURA = ['CANCELADO', 'PENDIENTE', 'NC']
 
+export const CONDICION_FACTURA = ['CONTADO', 'CRÉDITO']
+
 export const CONDICION_FOLIO = ['EMITIDO', 'PENDIENTE', 'FICTICIOS']
 
 export const TIPOS_TANQUE = [
