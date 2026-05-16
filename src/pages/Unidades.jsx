@@ -13,23 +13,23 @@ const LABEL = 'mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-wides
 const FILTER = 'min-h-[44px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-ag-ink outline-none transition focus:border-ag-red focus:ring-2 focus:ring-ag-red/20 font-barlow'
 
 const FORM_FIELDS = [
-  { id: 'vin',                label: 'VIN *',                  type: 'text',   span: true,  upper: true,  required: true },
-  { id: 'marca',              label: 'Marca',                  type: 'text' },
-  { id: 'modelo',             label: 'Modelo',                 type: 'text' },
-  { id: 'anio',               label: 'Año',                    type: 'number' },
-  { id: 'color',              label: 'Color',                  type: 'text' },
-  { id: 'placa',              label: 'Placa (opcional)',        type: 'text',   span: true },
-  { id: 'sede',               label: 'Sede *',                 type: 'select', options: SEDES,          required: true },
-  { id: 'concesionaria',      label: 'Concesionaria *',        type: 'select', options: CONCESIONARIAS, required: true },
-  { id: 'tipoConversion',     label: 'Tipo Conversión *',      type: 'select', options: TIPOS_CONVERSION, required: true },
-  { id: 'bloque',             label: 'Bloque',                 type: 'text' },
-  { id: 'fechaIngreso',       label: 'Fecha Ingreso *',        type: 'date',   span: true,  required: true },
-  { id: 'motorSerie',         label: 'Motor Serie',            type: 'text',   upper: true },
-  { id: 'folioInterno',       label: 'Folio Interno',          type: 'text',   upper: true },
-  { id: 'fichaRecepcion',     label: 'Ficha Recepción',        type: 'text',   upper: true },
-  { id: 'fechaEntrega',       label: 'Fecha Entrega',          type: 'date' },
-  { id: 'tecnicoElectronico', label: 'Técnico Electrónico',    type: 'text',   upper: true },
-  { id: 'tecnicoMecanico',    label: 'Técnico Mecánico',       type: 'text',   upper: true },
+  { id: 'vin', label: 'VIN *', type: 'text', span: true, upper: true, required: true },
+  { id: 'marca', label: 'Marca', type: 'text' },
+  { id: 'modelo', label: 'Modelo', type: 'text' },
+  { id: 'anio', label: 'Año', type: 'number' },
+  { id: 'color', label: 'Color', type: 'text' },
+  { id: 'placa', label: 'Placa (opcional)', type: 'text', span: true },
+  { id: 'sede', label: 'Sede *', type: 'select', options: SEDES, required: true },
+  { id: 'concesionaria', label: 'Concesionaria *', type: 'select', options: CONCESIONARIAS, required: true },
+  { id: 'tipoConversion', label: 'Tipo Conversión *', type: 'select', options: TIPOS_CONVERSION, required: true },
+  { id: 'bloque', label: 'Bloque', type: 'text' },
+  { id: 'fechaIngreso', label: 'Fecha Ingreso *', type: 'date', span: true, required: true },
+  { id: 'motorSerie', label: 'Motor Serie', type: 'text', upper: true },
+  { id: 'folioInterno', label: 'Folio Interno', type: 'text', upper: true },
+  { id: 'fichaRecepcion', label: 'Ficha Recepción', type: 'text', upper: true },
+  { id: 'fechaEntrega', label: 'Fecha Entrega', type: 'date' },
+  { id: 'tecnicoElectronico', label: 'Técnico Electrónico', type: 'text', upper: true },
+  { id: 'tecnicoMecanico', label: 'Técnico Mecánico', type: 'text', upper: true },
   { id: 'observacionRecepcion', label: 'Observación Recepción', type: 'textarea', span: true },
 ]
 
@@ -57,7 +57,11 @@ export default function Unidades() {
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'unidades'), (snapshot) => {
       const data = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
-      data.sort((a, b) => (b.creadoEn?.toMillis?.() || 0) - (a.creadoEn?.toMillis?.() || 0))
+      data.sort((a, b) => {
+        const ta = b.creadoEn?.toMillis?.() ?? new Date(b.creadoEn || 0).getTime()
+        const tb = a.creadoEn?.toMillis?.() ?? new Date(a.creadoEn || 0).getTime()
+        return ta - tb
+      })
       setUnidades(data)
       setLoading(false)
     })
