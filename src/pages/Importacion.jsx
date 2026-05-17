@@ -35,7 +35,7 @@ const mapFilaAUnidad = (fila) => {
     folio: fila[1] ? String(fila[1]).trim() : '',
     anio: fila[15] ? Number(fila[15]) : null,
     mes: normalizeText(fila[3]),
-    bloque: fila[4] ? String(fila[4]).trim() : '',
+    bloque: fila[4] instanceof Date ? '' : fila[4] ? String(fila[4]).trim() : '',
     sede: normalizeText(fila[5]),
     tipoConversion: normalizeText(fila[6]),
     concesionaria: normalizeText(fila[7]),
@@ -297,11 +297,10 @@ export default function Importacion() {
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
-          className={`rounded-2xl border-2 border-dashed bg-white p-16 text-center transition-colors ${
-            dragging
+          className={`rounded-2xl border-2 border-dashed bg-white p-16 text-center transition-colors ${dragging
               ? 'border-ag-red bg-ag-red/5'
               : 'border-neutral-200 hover:border-neutral-300'
-          }`}
+            }`}
         >
           <div className={`mx-auto mb-4 ${dragging ? 'text-ag-red' : 'text-neutral-300'}`}>
             <IconUpload />
@@ -382,11 +381,10 @@ export default function Importacion() {
                   {registros.map((r, i) => (
                     <tr
                       key={i}
-                      className={`border-b border-neutral-50 text-xs transition-colors last:border-0 ${
-                        r.valido
+                      className={`border-b border-neutral-50 text-xs transition-colors last:border-0 ${r.valido
                           ? 'hover:bg-emerald-50/40'
                           : 'bg-red-50/60 hover:bg-red-50'
-                      }`}
+                        }`}
                     >
                       <td className="px-4 py-2.5 text-neutral-400">{r.item}</td>
                       <td className="px-4 py-2.5 font-mono font-semibold text-ag-ink">
@@ -399,22 +397,20 @@ export default function Importacion() {
                       <td className="px-4 py-2.5 text-neutral-600">{r.sede || '—'}</td>
                       <td className="px-4 py-2.5">
                         {r.tipo ? (
-                          <span className={`rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase ${
-                            r.tipo === 'GNV'
+                          <span className={`rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase ${r.tipo === 'GNV'
                               ? 'bg-blue-100 text-blue-700'
                               : 'bg-amber-100 text-amber-700'
-                          }`}>
+                            }`}>
                             {r.tipo}
                           </span>
                         ) : '—'}
                       </td>
                       <td className="px-4 py-2.5">
                         {r.estado ? (
-                          <span className={`rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase ${
-                            r.estado === 'Convertido'
+                          <span className={`rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase ${r.estado === 'Convertido'
                               ? 'bg-emerald-100 text-emerald-700'
                               : 'bg-neutral-100 text-neutral-500'
-                          }`}>
+                            }`}>
                             {r.estado}
                           </span>
                         ) : '—'}
