@@ -111,7 +111,7 @@ export default function Unidades() {
       <ToastContainer />
 
       <PageHeader
-        title="UNIDAD"
+        title="UNIDADES"
         accent="ES"
         action={
           <button
