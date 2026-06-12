@@ -58,7 +58,7 @@ export default function Dashboard() {
   return (
     <div className="font-barlow text-ag-ink">
       <PageHeader
-        title="Dash"
+        title="Dashboard"
         accent="board"
         subtitle="Resumen operativo — AutoGas Sistema"
       />
