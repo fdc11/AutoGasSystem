@@ -287,7 +287,7 @@ export default function Importacion() {
           IMPORTAR <span className="text-ag-red">EXCEL</span>
         </h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Carga el archivo "CONTROL DE CONVERSIONES" para importar o actualizar registros en Firestore.
+          Carga el archivo para importar o actualizar registros en Firestore.
         </p>
       </div>
 
@@ -298,8 +298,8 @@ export default function Importacion() {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           className={`rounded-2xl border-2 border-dashed bg-white p-16 text-center transition-colors ${dragging
-              ? 'border-ag-red bg-ag-red/5'
-              : 'border-neutral-200 hover:border-neutral-300'
+            ? 'border-ag-red bg-ag-red/5'
+            : 'border-neutral-200 hover:border-neutral-300'
             }`}
         >
           <div className={`mx-auto mb-4 ${dragging ? 'text-ag-red' : 'text-neutral-300'}`}>
@@ -382,8 +382,8 @@ export default function Importacion() {
                     <tr
                       key={i}
                       className={`border-b border-neutral-50 text-xs transition-colors last:border-0 ${r.valido
-                          ? 'hover:bg-emerald-50/40'
-                          : 'bg-red-50/60 hover:bg-red-50'
+                        ? 'hover:bg-emerald-50/40'
+                        : 'bg-red-50/60 hover:bg-red-50'
                         }`}
                     >
                       <td className="px-4 py-2.5 text-neutral-400">{r.item}</td>
@@ -398,8 +398,8 @@ export default function Importacion() {
                       <td className="px-4 py-2.5">
                         {r.tipo ? (
                           <span className={`rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase ${r.tipo === 'GNV'
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-amber-100 text-amber-700'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-amber-100 text-amber-700'
                             }`}>
                             {r.tipo}
                           </span>
@@ -408,8 +408,8 @@ export default function Importacion() {
                       <td className="px-4 py-2.5">
                         {r.estado ? (
                           <span className={`rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase ${r.estado === 'Convertido'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-neutral-100 text-neutral-500'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-neutral-100 text-neutral-500'
                             }`}>
                             {r.estado}
                           </span>
